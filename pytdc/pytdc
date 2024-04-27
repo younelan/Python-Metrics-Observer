@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+
+# main.py
+import os
+import sys
+
+# Add the project root directory to sys.path
+project_root = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, project_root)
+
+import argparse
+from PluginController import PluginController
+
+def help():
+    print("Periscope Server Control Help\n---------------------\n")
+    print("tdc -c [plugin]               - call tdc specified plugin")
+    print("tdc -c [plugin] -a [action]   - call tdc with plugin and run specified action")
+    print("tdc update - run data collection on all plugins\n")
+
+def update(controller):
+    print("Updating")
+    controller.on_update()
+    controller.on_long_update()
+
+def main():
+    config = [
+            ]
+    parser = argparse.ArgumentParser(description="Periscope Server Control")
+    parser.add_argument("-c", "--call", metavar="[plugin]", help="call tdc specified plugin")
+    parser.add_argument("-a", "--action", metavar="[action]", help="run specified action")
+    parser.add_argument("-u", "--update", action="store_true", help="run data collection on all plugins")
+    args = parser.parse_args()
+
+    plugin_folder = os.path.join(os.path.dirname(__file__), 'plugins')  # Path to the plugins folder
+    data_folder = os.path.join(os.path.dirname(__file__), 'data')  # Path to the plugins folder
+    controller = PluginController(config)
+    controller.load_translations(os.path.join(data_folder, 'translations.json'))
+
+    controller.add_folder(plugin_folder)
+
+    if args.update:
+        update(controller)
+    elif args.call:
+        if args.action:
+            controller.on_command({'c': args.call, 'a': args.action})
+        else:
+            print("No action specified")
+    else:
+        help()
+
+if __name__ == "__main__":
+    main()
+
