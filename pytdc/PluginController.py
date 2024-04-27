@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 from pathlib import Path
 from Plugin import Plugin  # Importing Plugin class from Plugin.py
 import importlib.util
