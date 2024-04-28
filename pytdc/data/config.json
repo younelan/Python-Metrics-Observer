@@ -1,0 +1,14 @@
+{
+	"ping-subnets": ["192.168.1.0/26"],
+	"connection-name": "The Internet",
+	"ping-address": "8.8.8.8",
+	"credentials": {
+		"router": {
+			"type":"nokia",
+			"user":"admin",
+			"pass":"admin",
+			"host":"192.168.1.1",
+			"port": 22
+		}
+	}
+}
