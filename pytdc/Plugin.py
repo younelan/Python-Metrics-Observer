@@ -3,7 +3,7 @@ import json
 class Plugin:
     def __init__(self, config):
         self.config = config
-        self.data = []
+        self.data = {}
         self.translations = {}
         self.handler = None
 
@@ -11,12 +11,20 @@ class Plugin:
         self.translations = translations
         
     def get_translation(self,i18nstr, lang=""):
-        lang = lang or self.config.get('lang', 'en')
+        if not lang:
+            try:
+                lang = self.config['lang']
+            except:
+                lang = "en" 
         # try:
         #     retval = self.translations[lang][i18nstr]
         # except:
         #     retval = i18nstr
-        return self.get(lang, {}).get(i18nstr, i18nstr)
+        try:
+            retval = self.translations[lang][i18nstr]
+        except:
+            retval = i18nstr
+        return retval
 
     def store(self, collection, fname=None):
         json_data = json.dumps(collection)
@@ -65,15 +73,10 @@ class Plugin:
     def show_widget(self, params):
         return ""
 
-def get_translation(i18nstr, lang=""):
-    translations = {  # You need to define translations here
-        "en": {
-            # English translations
-        },
-        # Other language translations...
-    }
-    # Use the provided language or default to English
-    lang = lang or config.get('lang', 'en')
-    # Get translation or return the original string
-    return translations.get(lang, {}).get(i18nstr, i18nstr)
+# def get_translation(i18nstr, lang=""):
+    
+#     # Use the provided language or default to English
+#     lang = lang or config.get('lang', 'en')
+#     # Get translation or return the original string
+#     return translations.get(lang, {}).get(i18nstr, i18nstr)
 

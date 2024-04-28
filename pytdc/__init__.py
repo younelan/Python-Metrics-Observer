@@ -6,9 +6,9 @@ import sys
 current_dir = os.path.abspath(os.path.dirname(__file__))
 
 # Add the parent directory to sys.path
-sys.path.insert(0, parent_dir)
+#sys.path.insert(0, parent_dir)
 sys.path.insert(0, current_dir)
 
-import Plugin
+import Plugin.Plugin
 import PluginController
 

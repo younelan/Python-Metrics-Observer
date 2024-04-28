@@ -2,6 +2,7 @@ import os,sys
 from os.path import dirname, abspath
 base_folder = dirname(dirname(abspath(__file__)) )
 sys.path.insert(0, base_folder)
+from datetime import datetime
 
 from Plugin import Plugin
 
@@ -21,17 +22,20 @@ class Vitals(Plugin):
         uptime = open("/proc/uptime").read().split()[0]
         time_seconds = float(uptime)
         if time_seconds / 3600 < 24:
-            time = "{:02}:{:02}:{:02}".format(int(time_seconds / 3600), int((time_seconds / 60) % 60), time_seconds % 60)
+            time = "{:02}:{:02}:{:02}".format(int(time_seconds // 3600), int((time_seconds // 60) % 60), time_seconds % 60)
         else:
-            time = "{:d} days {:02}:{:02}:{:02}".format(int(time_seconds / (3600 * 24)), int((time_seconds / 3600) % 24), int((time_seconds / 60) % 60), time_seconds % 60)
+            time = "{:d} days {:02}:{:02}:{:02}".format(int(time_seconds // (3600 * 24)), int((time_seconds // 3600) % 24), int((time_seconds // 60) % 60), time_seconds % 60)
         load = round(os.getloadavg()[0], 2)
+
         data = {
             "time": self.get_translation("Time"),
             "start": self.get_translation("Uptime"),
             "load": self.get_translation("Load")
         }
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
         status = {
-            "time": date('h:i:s'),
+            "time": current_time,
             "start": time,
             "load": load
         }
