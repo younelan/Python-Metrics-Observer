@@ -33,6 +33,9 @@ To configure pytdc, you use data/config.json
         }
 }
 
+##requirements
+install flask
+
 ```
 
 - **ping-subnets** : comma separated list of subnets for nmap, used by the Network Plugin
