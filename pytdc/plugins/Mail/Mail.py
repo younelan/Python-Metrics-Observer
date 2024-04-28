@@ -8,25 +8,6 @@ base_folder = dirname(dirname(abspath(__file__)) )
 sys.path.insert(0, base_folder)
 from Plugin import Plugin
 
-class ePlugin:
-    def __init__(self, config):
-        self.config = config
-
-    def get_translation(self, i18nstr, lang=""):
-        global translations
-        if not lang:
-            lang = self.config.get('lang', 'en')
-        retval = translations.get(lang, {}).get(i18nstr, i18nstr)
-        return retval
-
-    def run_command(self, command):
-        try:
-            result = subprocess.check_output(command, shell=True, text=True)
-            return result.strip()
-        except subprocess.CalledProcessError as e:
-            print(f"Error executing command '{command}': {e}")
-            return None
-
 class Mail(Plugin):
     def show_page(self, params):
         page = params.get('page', 'viewqueue')
