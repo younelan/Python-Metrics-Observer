@@ -1,0 +1,171 @@
+#! /usr/bin/perl
+
+# $Id: mailgrep.pl,v 1.2 2004/11/21 02:20:10 root Exp $
+
+# (C) Copyright Craig Sanders <cas@taz.net.au>, 2001
+#
+# this program is licensed under the terms of the GNU General Public 
+# License (GPL)
+#
+# the latest version can always be found at http://taz.net.au/postfix/scripts
+
+use Getopt::Long;
+use File::MMagic ;
+use Pod::Usage;
+
+# add bin directory to @INC for openlogfile.pl
+use FindBin;
+use lib "$FindBin::Bin";
+
+use strict ;
+
+my @search = ();
+my $debug = 0 ;
+my $queue = 0 ;
+my $help = 0;
+
+my $FH ;
+
+require "openlogfile.pl" ;
+
+GetOptions('help|?|h' => \$help, 
+           'search=s' => \@search, 
+           'debug|d' => \$debug, 
+           'queue-id|q' =>\$queue) or pod2usage(2);
+
+pod2usage(1) if $help;
+
+# uncomment this to allow multiple search strings
+# to be separated by commas.  this breaks any
+# perl regexps containing commas.
+#
+#@search=split(/,/,join(",",@search)) ;
+
+if ($debug) {
+    # debug option is undocumented :)
+    print "queue-id      = $queue\n" ;
+    print "search string = ", join("|", @search), "\n" ;
+    print "ARGV = ", join(",",@ARGV)," \n" ;
+    exit 0
+}
+
+pod2usage(1) if (scalar @search eq 0) ;
+
+my ($grep, @files, %ID) ;
+
+# default to searching /var/log/mail.log
+if (@ARGV == 0) { push @ARGV, "/var/log/mail.log" } ;
+
+if (! $queue) {
+    # backup argv files list
+    @files = @ARGV ;
+
+    my $search = join("|",@search) ;
+
+    foreach my $file (@ARGV) {
+        $FH = &open_log_file($file) ;
+        # construct a sorted, unique list of queue ids to search for.
+        while (<$FH>) {
+            next unless (/ postfix\/.*($search)/io) ;
+            chomp ;
+
+            $ID{$_} = 1 if (s/.*( [A-Z0-9]{5,}: ).*/$1/o) ;
+        } ;
+        close($FH);
+    } ;
+
+    # push files list back onto @ARGV
+    @ARGV=@files ;
+} else {
+    foreach (@search) { $ID{$_} = 1 } ;
+} ;
+
+# exit if no queue ids to search for.
+if (scalar keys %ID == 0) {
+    exit 0 
+};
+
+$grep = join("|",(keys %ID));
+$grep=" postfix\/.*($grep)" ;
+
+print "$grep\n" ;
+
+# grep log files 
+foreach my $file (@ARGV) {
+    $FH = &open_log_file($file) ;
+    while (<$FH>) {
+        print if (/$grep/io) ;
+    } ;
+    close($FH);
+}; 
+
+=head1 NAME
+
+mailgrep.pl - search mail.log files for regexp patterns or queue ids.
+
+=head1 SYNOPSIS
+
+mailgrep.pl [options] [file ...]
+
+B<mailgrep.pl> will scan the input file(s) and display matching
+log entries.  
+
+if the B<--queue-id> option is used, the program will just display all
+lines matching the B<--search> string.
+
+if B<--queue-id> is not used, the program will first scan the log
+file(s) and build up a list of QUEUE-IDs to search for, then it will
+display all log file lines matching those QUEUE-IDs.
+
+If no filenames are provided, it will default to /var/log/mail.log
+
+If any of the log files are compressed, the program will invoke the
+appropriate decompressor programs to open them (zcat, gzcat, and
+bzcat are supported).
+
+
+Examples:
+
+to search for all log entries related to "foobar@example.com":
+
+    mailgrep.pl -s foobar@example.com
+
+to search for all log entries with two known queue-IDs:
+
+    mailgrep.pl -q -s 503991407CA -s 9F2391407CA 
+
+
+
+(C) Copyright Craig Sanders <cas@taz.net.au>, 2001
+
+This program is licensed under the terms of the GNU GPL
+
+=head1 OPTIONS
+
+=over 8
+
+=item B<--help>, B<-h>, B<-?>
+
+Print a brief help message and exit.
+
+=item B<--search>, B<-s>
+
+String(s) to search for.  This option may be repeated multiple times on
+the command line.
+
+The strings can be plain text or any valid perl regular expression.
+
+=item B<--queue-id>, B<-q>
+
+search string is a queue-id, not a pattern.
+
+=back
+
+=head1 DESCRIPTION
+
+B<mailgrep.pl> will scan the mail.log input file(s) and display
+matching lines.
+
+=cut
+
+

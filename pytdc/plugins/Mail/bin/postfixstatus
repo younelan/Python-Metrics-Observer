@@ -1,0 +1,29 @@
+#/bin/bash
+
+ps -e -o pid,ppid,fname | perl -lane ' 
+    if ($F[1] != 1) { 
+        ++$c{$F[1]}->{$F[2]}; 
+    } elsif ($F[2] eq "master") { 
+        push(@masters, $F[0]); 
+    } 
+    END {
+        $count2=0; 
+        foreach $master (@masters) { 
+#            print "=== master: $master ==="; 
+            foreach $agent (keys %{$c{$master}}) { 
+#                printf "\t%-5d %s\n", $c{$master}->{$agent}, $agent; 
+             $count2++  
+	   } 
+        } 
+if($count2 != 0)
+{
+print "started";
+}
+else
+{
+print "stopped";
+}
+
+}
+'
+ 

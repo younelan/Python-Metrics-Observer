@@ -1,0 +1,4 @@
+sudo postconf -e defer_transports=smtp
+sudo postfix reload
+systemctl restart postfix
+

@@ -66,6 +66,7 @@ class Network(Plugin):
 
     def on_update(self):
         addr = self.config.get("ping-address", "8.8.8.8")
+        print("addr",addr,'---')
         subnets = self.config.get("ping-subnets", False)
 
         if self.ping_addr(addr):
@@ -109,26 +110,32 @@ class Network(Plugin):
         return self.data
 
     def ping_status(self):
-        addr = self.data['addr']
-        conn = self.config['connection-name']
+        addr = self.data.get('addr',"8.8.8.8")
+        conn = self.config.get('connection-name',"Internet")
         connstate = self.get_translation("Connection State")
         output = f"<span class='connlabel'><h2>{connstate} <span class='connip'>({conn})</span></b></font></h2>"
 
         output += f"{self.get_translation('Ping Test')}: "
-        if self.data['status'] == "connected":
+        if self.data.get('status',"") == "connected":
             output += f" <span class='connected'>{self.get_translation('Connected')}</span> <span class='connip'>({addr})</span> "
         else:
             output += f"<span class='disconnected'>{self.get_translation('No Response')}</span> <span class='connip'>({addr})</span> "
 
         return output
 
-    def show_widget(self, params):
-        widget = params.get('widget', 'ping_status')
-
+    def show_widget(self, widget):
+        print (widget)
+        #widget = params.get('widget', 'ping_status')
+        #widget=params
+        if not widget:
+            widget = "ping_status"
+        ping_status=self.ping_status()
+        #print("his %s gg" %ping_status) 
+        #print  (ping_status)
         if widget.lower() == "ping_status":
-            return self.ping_status()
+            return ping_status
         else:
-            return ""
+            return "hello"
 
     def ping_addr(self, addr, count=1):
         cmd = f"ping -c {count} {addr}"

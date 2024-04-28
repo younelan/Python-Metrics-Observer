@@ -1,0 +1,33 @@
+#/bin/bash
+
+ps -e -o pid,ppid,fname | perl -lane ' 
+    if ($F[1] != 1) { 
+        ++$c{$F[1]}->{$F[2]}; 
+    } elsif ($F[2] eq "master") { 
+        push(@masters, $F[0]); 
+    } 
+    END { 
+        foreach $master (@masters) { 
+         #   print "=== master: $master ==="; 
+$count++;
+            foreach $agent (keys %{$c{$master}}) { 
+        #        printf "\t%-5d %s\n", $c{$master}->{$agent}, $agent; 
+$count2++;
+            } 
+        } 
+   
+/*switch($count)
+{
+case "0":
+  print "Postfix non d&eacute;marr&eacute;";
+  break;
+case "1":
+  print "Postfix d&eacute;mar&eacute;. $count2 processus";
+  break;
+case else:
+  print "$count serveurs d&eacute;marr&eacute;s. $count2 procesus";
+}
+*/
+}
+'
+ 

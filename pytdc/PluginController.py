@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from Plugin import Plugin  # Importing Plugin class from Plugin.py
 import importlib.util
+from flask import render_template
 
 class PluginController:
     def __init__(self, config):
@@ -39,6 +40,10 @@ class PluginController:
             print(f"Error loading plugin {plugin_name}: {e}")
             return None
 
+    def get_translation(self,the_str):
+        return the_str
+        #returning string since defined in plugin base for now
+
     def add_folder(self, plugin_folder):
         if os.path.isdir(plugin_folder):
             for root, dirs, files in os.walk(plugin_folder):
@@ -48,26 +53,33 @@ class PluginController:
                         if plugin_instance:
                             self.plugins[dir_name.lower()] = plugin_instance
                             plugin_instance.set_translations(self.translations)
+                            plugin_instance.set_controller(self)
                             print(f"Loaded plugin {dir_name}")
 
     def on_web_page(self, app):
-        plugin = app['plugin']
-        theme = self.config['theme']
-
+        try:
+            plugin = app['plugin']
+        except:
+            plugin = 'network'
+            page = 'default'
+        #theme = self.config['theme']
+        #return "hi"
         if plugin.lower() not in self.plugins:
             plugin = "network"
             page = "hosts"
-
+        #return "hi babe"
         output = self.plugins[plugin.lower()].show_page(app)
-        theme_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), f"themes/{theme}")
-        template = YTemplate(os.path.join(theme_folder, "main.tpl"))
-        vars = self.config['vars']
-        vars['content'] = f"<div id='content'>{output}</div>"
         menu_entries = self.gen_menu()
-        vars['navigationmenu'] = menu_entries
-        template.setFromArray(vars)
-        print(template.parse())
+        vars = self.config.get('vars',{})
+        template_data = {
+            'content': output,
+            'navigationmenu': menu_entries,
+            'pagetitle': 'Periscope Server Tower',
+            **vars
+        }
 
+        return render_template('main.tpl', **template_data)
+    
     def on_command(self, options):
         plugin_name = options.get('p', '').lower()
         
@@ -89,22 +101,32 @@ class PluginController:
         for plugin_name, plugin in self.plugins.items():
             plugin_menus = plugin.get_menus() or {}
             for menu_name, menu_details in plugin_menus.items():
-                menu.setdefault(menu_name, []).extend(menu_details)
+                menu.setdefault(menu_name, {}).update(menu_details)
         output = "\n<nav id='navbar' class='navbar navbar-expand-lg bg-dark'>\n"
         output += "  <div class=\"collapse navbar-collapse\" id=\"navbarSupportedContent\">\n"
         output += "    <ul class=\"navbar-nav mr-auto\">\n"
+        #print (menu.items())
         for menu_id, menu_details in menu.items():
             link = menu_details.get('url', '#') if 'url' in menu_details else ''
             if 'plugin' in menu_details:
                 query = {'plugin': menu_details['plugin']}
                 query['page'] = menu_details.get('page', '')
                 link = f"?{'&'.join([f'{k}={v}' for k, v in query.items()])}"
-            label = get_translation(menu_details.get('text', menu_id))
-            if 'children' in menu_details and menu_details['children']:
+            try:
+                label = self.get_translation(menu_details.get('text', menu_id))
+            except:
+                label = "<menu>"
+            # try:
+            #     children = menu_details['children']
+            if False and 'children' in menu_details and menu_details.get('children',False):
                 output += '<li class="nav-item dropdown">'
                 output += f"  <a class=\"nav-link nav-link-primary dropdown-toggle\" role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' href=\"{link}\">{label}</a>\n"
                 output += '<div class="dropdown-menu" aria-labelledby="navbarDropdown">' 
-                for child_menu_id, child_menu_details in menu_details['children'].items():
+                for child_menu_idx in menu_details['children']:
+                    print(menu_details['children'])
+                    print(menu_details['children'][child_menu_idx])
+                    child_menu_details=menu_details['children'][child_menu_idx]
+                    print(child_menu_details)
                     child_link = child_menu_details.get('url', '')
                     if 'plugin' in child_menu_details:
                         query = {'plugin': child_menu_details['plugin']}
@@ -112,7 +134,7 @@ class PluginController:
                         if 'action' in child_menu_details:
                             query['action'] = child_menu_details['action']
                         child_link = f"?{'&'.join([f'{k}={v}' for k, v in query.items()])}"
-                    child_label = get_translation(child_menu_details.get('text', ''))
+                    child_label = self.get_translation(child_menu_details.get('text', ''))
                     output += f"    <a class=\"dropdown-item\" href=\"{child_link}\">{child_label}</a>\n"
                 output += "</div>"
             else:
@@ -123,5 +145,9 @@ class PluginController:
         return output
 
     def show_widget(self, plugin, widget):
-        return self.plugins.get(plugin.lower(), "").show_widget(widget)
+        try:
+            return self.plugins.get(plugin.lower(), "").show_widget(widget)
+        except KeyError:
+            return "Bad Widget %s::%s " % (plugin,widget)
+
 

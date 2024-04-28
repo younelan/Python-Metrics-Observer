@@ -73,13 +73,13 @@ class Vitals(Plugin):
 
     def show_page(self, app):
         config = self.config
-        uptime = self.data["uptime"]
+        uptime = self.data.get("uptime","")
         mem_info = self.show_memory()
         output = "<style>.widgetheader { color:darkblue}.label {font-weight: bold;color: #055;}.left {display: inline-block;width:40%;float:left;valign:top;dbackground-color: yellow;border-right: 10px solid red;padding-right:5px;}.m.right {padding-left:5px;display: inline-block;width:40%;ebackground-color: cyan;valign: top;}.connlabel {font-size: 1.5 em;color:darkblue}.connip {font-size: 0.8em}.connected {color: green}.disconnected {color: brown}</style>"
-        logoimg = config["logo"]
+        logoimg = config.get("logo","")
         output += "<div class='left'>"
         output += self.controller.show_widget("network", "ping_status")
-        output += "<div align=center><img align=absmiddle src='images/TowerLogo.png' width=200 height=auto></div><p>"
+        output += "<div align=center><img align=absmiddle src='res/images/TowerLogo.png' width=200 height=auto></div><p>"
         output += "</div><div class='right'>"
         output += "<p>"
         output += self.controller.show_widget("mail", "postfix_status")

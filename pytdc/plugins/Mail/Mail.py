@@ -2,6 +2,7 @@ import json
 import sys
 import subprocess
 from os.path import dirname,abspath
+import os
 
 base_folder = dirname(dirname(abspath(__file__)) )
 sys.path.insert(0, base_folder)
@@ -125,8 +126,9 @@ class Mail(Plugin):
         # Implementation...
         pass
 
-    def show_widget(self, params):
-        widget = params.get('widget', 'postfix_status')
+    def show_widget(self, widget):
+        if not widget: 
+            widget = 'postfix_status'
         if widget == "postfix_status":
             return self.postfix_status()
         else:
@@ -165,7 +167,11 @@ class Mail(Plugin):
         return output
 
     def mailcount(self):
-        mailqueue = self.run_command(['sudo', 'postqueue', '-p'])
-        count = len(mailqueue.split('@'))
+        mailqueue = self.run_command([ 'postqueue', '-p'])
+        print (mailqueue)
+        if mailqueue != None:
+            count = len(mailqueue.split('@'))
+        else:
+            count = 0
         return count
 

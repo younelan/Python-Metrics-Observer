@@ -4,6 +4,7 @@
 import os
 import json
 import sys
+from config import get_config
 
 # Add the project root directory to sys.path
 project_root = os.path.dirname(os.path.abspath(__file__))
@@ -22,28 +23,7 @@ def update(controller):
     print("Updating")
     controller.on_update()
     controller.on_long_update()
-def get_config():
-    config = {
-        'connection-name': "The Internet",
-        'ping-address': "4.4.4.4",
-        'ping-subnets': {},
-        'lang': 'en'
-    }
 
-    config['paths'] = {
-        'base': os.path.dirname(os.path.abspath(__file__)),
-        'data': os.path.join(os.path.dirname(os.path.abspath(__file__)), "data"),
-        'plugins': os.path.join(os.path.dirname(os.path.abspath(__file__)), "plugins"),
-    }
-    config_file_path = os.path.join(os.path.dirname(__file__), "data", "config.json")
-
-    if os.path.exists(config_file_path):
-        with open(config_file_path, 'r') as file:
-            json_config = json.load(file)
-            for key, value in json_config.items():
-                config[key] = value
-    print(config)
-    return config
 def main():
     config = get_config()
     parser = argparse.ArgumentParser(description="Periscope Server Control")

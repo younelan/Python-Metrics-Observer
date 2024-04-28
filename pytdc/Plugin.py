@@ -1,4 +1,5 @@
 import json
+import subprocess
 
 class Plugin:
     def __init__(self, config):
@@ -6,10 +7,21 @@ class Plugin:
         self.data = {}
         self.translations = {}
         self.handler = None
-
+        self.controller = None
+        
+    def set_controller(self, controller):
+        self.controller = controller
     def set_translations(self, translations):
         self.translations = translations
-        
+
+    def run_command(self, command):
+        try:
+            result = subprocess.check_output(command, shell=True, text=True)
+            return result.strip()
+        except subprocess.CalledProcessError as e:
+            print(f"Error executing command '{command}': {e}")
+            return None
+                
     def get_translation(self,i18nstr, lang=""):
         if not lang:
             try:
