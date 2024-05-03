@@ -48,7 +48,7 @@ class PluginController:
         if os.path.isdir(plugin_folder):
             for root, dirs, files in os.walk(plugin_folder):
                 for dir_name in dirs:
-                    if dir_name != '__pycache__':
+                    if dir_name not in  ['__pycache__','bin']:
                         plugin_instance = self.load_plugin(os.path.join(root, dir_name))
                         if plugin_instance:
                             self.plugins[dir_name.lower()] = plugin_instance
@@ -77,7 +77,7 @@ class PluginController:
             'pagetitle': 'Periscope Server Tower',
             **vars
         }
-
+        
         return render_template('main.tpl', **template_data)
     
     def on_command(self, options):
@@ -102,12 +102,11 @@ class PluginController:
             plugin_menus = plugin.get_menus() or {}
             for menu_name, menu_details in plugin_menus.items():
                 menu.setdefault(menu_name, {}).update(menu_details)
-        output = "\n<nav id='navbar' class='navbar navbar-expand-lg bg-dark'>\n"
-        output += "  <div class=\"collapse navbar-collapse\" id=\"navbarSupportedContent\">\n"
+        output=""
         output += "    <ul class=\"navbar-nav mr-auto\">\n"
-        #print (menu.items())
         for menu_id, menu_details in menu.items():
             link = menu_details.get('url', '#') if 'url' in menu_details else ''
+
             if 'plugin' in menu_details:
                 query = {'plugin': menu_details['plugin']}
                 query['page'] = menu_details.get('page', '')
@@ -118,15 +117,18 @@ class PluginController:
                 label = "<menu>"
             # try:
             #     children = menu_details['children']
-            if False and 'children' in menu_details and menu_details.get('children',False):
+            if 'children' in menu_details and menu_details.get('children',False):
                 output += '<li class="nav-item dropdown">'
                 output += f"  <a class=\"nav-link nav-link-primary dropdown-toggle\" role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' href=\"{link}\">{label}</a>\n"
                 output += '<div class="dropdown-menu" aria-labelledby="navbarDropdown">' 
-                for child_menu_idx in menu_details['children']:
-                    print(menu_details['children'])
-                    print(menu_details['children'][child_menu_idx])
-                    child_menu_details=menu_details['children'][child_menu_idx]
-                    print(child_menu_details)
+                for current_idx,current_menu in menu_details['children'].items():
+                    #print(current_idx)
+
+                    #print(menu_details['children'][current_idx])
+                    
+                    #print(menu_details['children'][child_menu_idx])
+                    child_menu_details=current_menu
+                    #print(child_menu_idx)
                     child_link = child_menu_details.get('url', '')
                     if 'plugin' in child_menu_details:
                         query = {'plugin': child_menu_details['plugin']}
@@ -141,7 +143,8 @@ class PluginController:
                 output += "<li class='nav-item'>\n"
                 output += f"  <a class=\"nav-link\" href=\"{link}\">{label}</a>\n"
             output += "</li>\n"
-        output += "    </ul>\n  </div>\n</nav>"
+        output += "    </ul>\n"
+        #print(output)
         return output
 
     def show_widget(self, plugin, widget):

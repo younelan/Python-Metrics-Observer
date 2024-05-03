@@ -6,25 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Server Tower Periscope</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    {{styles}}
     <style>
         /* Custom styles can be added here */
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
-            color: #343a40;
+            background-color: {{pagebg}};
+            color: {{pagefg}};
             padding-top: 56px;
         }
-
+	#content h2 {
+    font-size: 2rem;
+    background-color: #687db5;
+    color: white;
+    font-weight: bold;
+    padding: 5px;
+    padding-left: 20px;
+        }
         .navbar {
-            background-color: #007bff;
+            background-color: {{menubg}};
         }
 
         .navbar-brand {
-            color: #ffffff;
+            color: {{menufg}};
         }
 
         .navbar-nav .nav-link {
-            color: #ffffff;
+            color: {{menufg}};
         }
 
         .content {
@@ -37,6 +45,13 @@
                 padding-top: 0;
             }
         }
+ 	.logoimg {
+		height:40px;
+		width: auto;
+	}
+	#content {
+		margin-top:70px;
+	}
     </style>
 </head>
 
@@ -44,7 +59,7 @@
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#">{{pagetitle}}</a>
+            <a class="navbar-brand" href="#"><img class='logoimg' src='{{sitepath}}/{{logoimg}}' alt="{{title}}"></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -52,7 +67,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
                     <!-- Navigation menu items will be substituted here -->
-                    {{ navigationmenu }}
+                    {{navigationmenu}}
                 </ul>
             </div>
         </div>
@@ -61,7 +76,7 @@
     <!-- Content Section -->
     <div class="container content">
         <!-- Content will be substituted here -->
-        {{ content }}
+        {{content}}
     </div>
 
     <!-- Bootstrap JS CDN -->

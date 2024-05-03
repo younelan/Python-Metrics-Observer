@@ -1,0 +1,71 @@
+.memtable {padding-left: 10px}
+.memitem {font-weight:bold;color:darkblue}
+.memkey {
+    font-weight: bold;
+    color: white;
+    background-color: #3a71a1;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.memvalue {background-color:#ffc; color:#055;padding-left: 5px; padding-right: 5px;text-align:right}
+.widgetheader { 
+    color:white;
+    display: block;
+    width: 100%;
+    background-color:#3a71a1;
+}
+.label {font-weight: bold;color: #055;}
+.network-subheader {
+    background-color: #94c9e7;font-weight:bold;padding: 5px;    
+}
+.network-table {
+    background-color: #e7f7ff;
+    margin: 5px;
+    margin-right:10px;
+}
+#content {
+    background-color: #e9f9ff;
+    overflow: auto;
+}
+.network-table th {
+    padding: 5px;
+}
+.left {
+    display: inline-block;
+    width:40%;
+    float:left;
+    valign:top;
+    dbackground-color: yellow;
+    border-right: 10px solid red;
+    padding-right:5px;
+}
+.widget {
+    display: inline-block;
+    padding: 15px;
+}
+.right {
+    padding-left:5px;
+    display: inline-block;
+    width:40%;
+    ebackground-color: cyan;
+    valign: top;
+}
+.connlabel {font-size: 1.5 em;color:darkblue} 
+.connip {font-size: 0.8em}
+.connstatus-label {
+     size: 1.5em;
+     color:darkblue
+}
+.connstatus-value {
+    size: 1.5em;
+    color:red;
+}
+
+.status-up, .connected {color: green} 
+.status-down, .disconnected {color: brown}
+.ifconfig-table {border: 1px solid black;}
+.ifconfig-table th {background-color:#005;color:white;}
+.config-column {padding: 5px; border: 1px solid black;}
+.config-category {background-color: #ccc; color:black;}
+.config-table th {background-color:#005;color:white}
+.config-subcategory {background-color: #ffc; color:black;}

@@ -21,9 +21,9 @@ class Network(Plugin):
         return {
             "network": {
                 "text": "Network",
-                "children": [
-                    {"plugin": "network", "page": "hosts", "text": "Network Hosts"}
-                ]
+                "children": {
+                   'nethosts' : {"plugin": "network", "page": "hosts", "text": "Network Hosts"}
+                }
             }
         }
 

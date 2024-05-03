@@ -15,6 +15,28 @@ def get_config():
         'ping-subnets': {},
         'lang': 'en'
     }
+    config['vars'] = {
+      "footerfg": "#b69bd7",
+      "footerbg": "#415479",
+      "pagebg": "#8598c3",
+      "pagefg": "black",
+      "contentbefore": "",
+      "contentafter": "",
+      "footer": "(c) 2024 Periscope Server Control",   
+      "sitename": "Periscope Server Control",
+      "pagebefore": "",
+      "pageafter": "",
+      "contentbefore": "",
+      "contentafter": "",
+      "pagestyle": "",
+      "logoimg": "res/servercontrol.gif",
+      "menubg": "#142C50",
+      "menufg": "white",
+      "title": "Control Tower",
+      "footerfg": "#b69bd7",
+      "footerbg": "#415479",
+      "styles": "",
+      };
 
     config['paths'] = {
         'base': os.path.dirname(os.path.abspath(__file__)),
@@ -22,6 +44,11 @@ def get_config():
         'plugins': os.path.join(os.path.dirname(os.path.abspath(__file__)), "plugins"),
     }
     config_file_path = os.path.join(os.path.dirname(__file__), "data", "config.json")
+    styles_file_path = os.path.join(os.path.dirname(__file__), "templates", "styles.css")
+
+    if os.path.exists(styles_file_path):
+        with open(styles_file_path, 'r') as file:
+           config['vars']['styles']="<style>" + "".join(file.readlines()) + "</style>"
 
     if os.path.exists(config_file_path):
         with open(config_file_path, 'r') as file:
