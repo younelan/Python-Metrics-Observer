@@ -5,12 +5,12 @@ from os.path import dirname,abspath
 import os
 
 base_folder = dirname(dirname(dirname(abspath(__file__)) ))
-print(base_folder)
 sys.path.insert(0, base_folder)
 from CollectSSH import CollectSSH
 
 class NokiaCollector(CollectSSH):
     def __init__(self, sshconfig):
+        print(sshconfig)
         super().__init__(sshconfig)
         self.commandgroups = {
             'prelude': {

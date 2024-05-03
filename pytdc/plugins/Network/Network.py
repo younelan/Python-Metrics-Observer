@@ -8,7 +8,6 @@ from os.path import dirname, abspath
 
 base_folder = dirname(dirname(abspath(__file__)) )
 sys.path.insert(0, base_folder)
-print (base_folder)
 from Plugin import Plugin
 
 class Network(Plugin):
@@ -22,7 +21,9 @@ class Network(Plugin):
             "network": {
                 "text": "Network",
                 "children": {
-                   'nethosts' : {"plugin": "network", "page": "hosts", "text": "Network Hosts"}
+                    'nethosts' : {"plugin": "network", "page": "hosts", "text": "Network Hosts"},
+                    "router": {"plugin": "nokia2425", "page": "router", "text": "Router"}
+
                 }
             }
         }
@@ -66,7 +67,6 @@ class Network(Plugin):
 
     def on_update(self):
         addr = self.config.get("ping-address", "8.8.8.8")
-        print("addr",addr,'---')
         subnets = self.config.get("ping-subnets", False)
 
         if self.ping_addr(addr):

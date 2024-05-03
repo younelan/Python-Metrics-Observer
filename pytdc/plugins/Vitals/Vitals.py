@@ -84,8 +84,8 @@ class Vitals(Plugin):
         vital = self.get_translation("Server Vital Signs")
         output += f"<h2 class='widgetheader'>{vital}</h2><p>{uptime}<p>"
         output += f"<p>{mem_info}<p>"
-        output += "<div class='widget'><img align=absmiddle src='res/images/TowerLogo.png' width=200 height=auto></div>"
         output += "</div>"
+        output += "<div class='widget'><img align=absmiddle src='res/images/TowerLogo.png' width=200 height=auto></div>"
         output += "</div>"
         return output
 

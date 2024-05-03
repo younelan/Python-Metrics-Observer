@@ -1,4 +1,11 @@
-from CollectSSH import CollectSSH
+import sys
+import os
+from os.path import dirname, abspath
+
+base_folder = dirname(dirname(abspath(__file__)) )
+sys.path.insert(0, base_folder)
+
+from Plugin import Plugin
 
 class Nokia2425(Plugin):
     def __init__(self, config):
@@ -11,14 +18,19 @@ class Nokia2425(Plugin):
     def get_menus(self):
         return {
             "network": {
+                "text": "Network",
                 "children": {
+                    'nethosts' : {"plugin": "network", "page": "hosts", "text": "Network Hosts"},
                     "router": {"plugin": "nokia2425", "page": "router", "text": "Router"}
+
                 }
             }
         }
 
     def on_long_update(self):
         sshconfig = self.config["credentials"].get("router", {})
+        print (sshconfig)
+        return False
         ssh = NokiaCollector(sshconfig)
 
         if ssh.connect():
@@ -33,17 +45,23 @@ class Nokia2425(Plugin):
     def show_page(self, params):
         page = params.get("page", "router")
         action = params.get("action", "")
-
-        if page == "router":
-            return self.show_config()
+        match page:
+            case "router":
+                return self.show_config()
+            case _:
+                return "default case"
 
     def show_config(self):
         retval = ""
         hostfile = f"{self.config['paths']['data']}/router.json"
         routerconfig = json.loads(open(hostfile).read()) if os.path.exists(hostfile) else {}
+        rows = {}
 
         for name, section in routerconfig.get("info", {}).items():
-            status = '<span style="color:green">up</span>' if section.get("success", False) else '<span style="color:red">down</span>'
+            if section.get("success", False):
+                status = '<span class="connected">up</span>' 
+            else:
+                status = '<span class="disconnected">down</span>'
             data_type = section.get("format", "text")
             delimeter = section.get("delimeter", ":")
             category = section.get("category", "default")
@@ -51,7 +69,6 @@ class Nokia2425(Plugin):
             if data_type == "single-column":
                 pos = 1
                 lines = section.get("data", "").split("\n")
-                rows = {}
                 if lines:
                     while pos < len(lines):
                         line = lines[pos].strip()
@@ -62,10 +79,6 @@ class Nokia2425(Plugin):
             elif data_type == "ifconfig":
                 ifconfig = self.parse_ifconfig_output(section.get("data", ""))
                 tabledata = """
-                <style>
-                .ifconfig-table {border: 1px solid black;}
-                .ifconfig-table th {background-color:#005;color:white;}
-                </style>
                 <table class='ifconfig-table'>\n
                 """
                 headerrow = list(ifconfig.values())[0]
@@ -94,23 +107,18 @@ class Nokia2425(Plugin):
                 retval += "</pre>"
 
         mixedtable = "<h1>System Information </h1>\n"
-        mixedtable += "<table class='config-table'>"
-        mixedtable += "<tr><th class='config-category config-column'>Category</th><th class='config-subcategory config-column'>Subcategory</th><th class='config-column config-value'>Value</th></tr>"
-        mixedtable += """
-            <style>
-            .config-column {padding: 5px; border: 1px solid black;}
-            .config-category {background-color: #ccc; color:black;}
-            .config-table th {background-color:#005;color:white}
-            .config-subcategory {background-color: #ffc; color:black;}
-            </style>
-        """
-        for category, entries in rows.items():
-            for configkey, configvalue in entries.items():
-                mixedtable += "<tr>"
-                mixedtable += f"<td class='config-category config-column'>{category}</td><td class='config-subcategory config-column'>{configkey}</td><td class='config-column config-value'>{configvalue}</td>"
-                mixedtable += "</tr>"
+        if rows:
+            mixedtable += "<table class='config-table'>"
+            mixedtable += "<tr><th class='config-category config-column'>Category</th><th class='config-subcategory config-column'>Subcategory</th><th class='config-column config-value'>Value</th></tr>"
 
-        mixedtable += "</table>"
+            for category, entries in rows.items():
+                for configkey, configvalue in entries.items():
+                    mixedtable += "<tr>"
+                    mixedtable += f"<td class='config-category config-column'>{category}</td><td class='config-subcategory config-column'>{configkey}</td><td class='config-column config-value'>{configvalue}</td>"
+                    mixedtable += "</tr>"
+                    mixedtable += "</table>"
+        else:
+            mixedtable += "No data found, Make sure plugin is running"
         retval = mixedtable + retval
         return retval
 
