@@ -62,7 +62,7 @@ class Vitals(Plugin):
             "SwapTotal": "Total Swap",
             "SwapFree": "Available Swap"
         }
-        output = "<style>.memtable {padding-left: 10px}.memitem {font-weight:bold;color:darkblue}.memkey {font-weight:bold;background-color: #CCC;padding-left: 10px;padding-right:10px}.memvalue {padding-left: 5px; padding-right: 5px;text-align:right}</style>"
+        output = ""
         output += "<table class='memtable'>"
         for key, value in vars.items():
             output += f"<tr><td class='memkey'>{self.get_translation(value)}</td>"
@@ -75,16 +75,17 @@ class Vitals(Plugin):
         config = self.config
         uptime = self.data.get("uptime","")
         mem_info = self.show_memory()
-        output = "<style>.widgetheader { color:darkblue}.label {font-weight: bold;color: #055;}.left {display: inline-block;width:40%;float:left;valign:top;dbackground-color: yellow;border-right: 10px solid red;padding-right:5px;}.m.right {padding-left:5px;display: inline-block;width:40%;ebackground-color: cyan;valign: top;}.connlabel {font-size: 1.5 em;color:darkblue}.connip {font-size: 0.8em}.connected {color: green}.disconnected {color: brown}</style>"
+        output = ""
         logoimg = config.get("logo","")
-        output += "<div class='left'>"
+        output += "<div class='widget'>";
         output += self.controller.show_widget("network", "ping_status")
-        output += "<div align=center><img align=absmiddle src='res/images/TowerLogo.png' width=200 height=auto></div><p>"
-        output += "</div><div class='right'>"
-        output += "<p>"
+        output += "</div><div class=widget>";
         output += self.controller.show_widget("mail", "postfix_status")
         vital = self.get_translation("Server Vital Signs")
         output += f"<h2 class='widgetheader'>{vital}</h2><p>{uptime}<p>"
         output += f"<p>{mem_info}<p>"
+        output += "<div class='widget'><img align=absmiddle src='res/images/TowerLogo.png' width=200 height=auto></div>"
+        output += "</div>"
+        output += "</div>"
         return output
 

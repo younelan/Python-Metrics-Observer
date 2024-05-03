@@ -48,7 +48,7 @@ def get_config():
 
     if os.path.exists(styles_file_path):
         with open(styles_file_path, 'r') as file:
-           config['vars']['styles']="<style>" + "".join(file.readlines()) + "</style>"
+           config['vars']['pagestyle']="<style>" + "".join(file.readlines()) + "</style>"
 
     if os.path.exists(config_file_path):
         with open(config_file_path, 'r') as file:

@@ -69,12 +69,12 @@ class Mail(Plugin):
     def show_queue_summary(self):
         raw_queue = self.get_queue()
         # Implementation...
-        pass
+        return "summary"
 
     def show_queue(self):
         raw_queue = self.get_queue()
         # Implementation...
-        pass
+        return "queue"
 
     def view_message(self, msg_id):
         # Implementation...

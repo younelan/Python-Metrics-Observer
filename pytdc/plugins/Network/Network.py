@@ -113,13 +113,21 @@ class Network(Plugin):
         addr = self.data.get('addr',"8.8.8.8")
         conn = self.config.get('connection-name',"Internet")
         connstate = self.get_translation("Connection State")
-        output = f"<span class='connlabel'><h2>{connstate} <span class='connip'>({conn})</span></b></font></h2>"
-
-        output += f"{self.get_translation('Ping Test')}: "
-        if self.data.get('status',"") == "connected":
-            output += f" <span class='connected'>{self.get_translation('Connected')}</span> <span class='connip'>({addr})</span> "
+        output = "<h2 class='widgetheader'>" + self.get_translation("Ping Test") + "</h2>";
+    
+        output += "<span class='connlabel'>" + "<span class='connip'>%s</span>\n</span>: " % (conn);
+        if  self.data.get('status',"") == "connected":
+            output += " <span class='connected'>" + self.get_translation("Connected") + "</span> <span class='connip'>(%s)</span> " % (addr)
         else:
-            output += f"<span class='disconnected'>{self.get_translation('No Response')}</span> <span class='connip'>({addr})</span> "
+            output += "<span class='disconnected'>" + self.get_translation("No Response") + "</span> <span class='connip'>(%s)</span> "  % (addr)
+
+        # output = f"<span class='connlabel'><h2>{connstate} <span class='connip'>({conn})</span></b></font></h2>"
+
+        # output += f"{self.get_translation('Ping Test')}: "
+        # if self.data.get('status',"") == "connected":
+        #     output += f" <span class='connected'>{self.get_translation('Connected')}</span> <span class='connip'>({addr})</span> "
+        # else:
+        #     output += f"<span class='disconnected'>{self.get_translation('No Response')}</span> <span class='connip'>({addr})</span> "
 
         return output
 
