@@ -1,11 +1,17 @@
 import sys
 import os
+import json
+import re
 from os.path import dirname, abspath
 
 base_folder = dirname(dirname(abspath(__file__)) )
 sys.path.insert(0, base_folder)
+base_folder = dirname(__file__) 
+sys.path.insert(0, base_folder)
+
 
 from Plugin import Plugin
+import NokiaCollector as nc
 
 class Nokia2425(Plugin):
     def __init__(self, config):
@@ -20,7 +26,6 @@ class Nokia2425(Plugin):
             "network": {
                 "text": "Network",
                 "children": {
-                    'nethosts' : {"plugin": "network", "page": "hosts", "text": "Network Hosts"},
                     "router": {"plugin": "nokia2425", "page": "router", "text": "Router"}
 
                 }
@@ -29,12 +34,14 @@ class Nokia2425(Plugin):
 
     def on_long_update(self):
         sshconfig = self.config["credentials"].get("router", {})
-        print (sshconfig)
-        return False
-        ssh = NokiaCollector(sshconfig)
+
+        ssh = nc.NokiaCollector()
+        ssh.set_ssh_config(sshconfig)
 
         if ssh.connect():
             collection = ssh.collect()
+            print ("--collecting")
+            print (collection)
         else:
             collection = []
             self.debug(1, f"Connection failed. Error: {ssh.get_error()}\n")

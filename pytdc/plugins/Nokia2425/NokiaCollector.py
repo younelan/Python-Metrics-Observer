@@ -9,10 +9,7 @@ sys.path.insert(0, base_folder)
 from CollectSSH import CollectSSH
 
 class NokiaCollector(CollectSSH):
-    def __init__(self, sshconfig):
-        print(sshconfig)
-        super().__init__(sshconfig)
-        self.commandgroups = {
+        commandgroups = {
             'prelude': {
                 'enable': {'command': 'enable', 'waitfor': 'user.*#'},
                 'show': {'command': 'show', 'waitfor': 'user.*#'}

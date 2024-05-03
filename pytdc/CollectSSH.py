@@ -7,22 +7,25 @@ from Plugin import Plugin
 
 
 class CollectSSH(Plugin):
-    def __init__(self, sshconfig):
-        super().__init__()
+    def __init__(self, config=False):
+        self.config = {}
         self.connection = None
-        self.sshconfig = sshconfig
+        self.sshconfig = {}
         self.shell = None
         self.error = ""
         self.collections = []
         self.logger = logging.getLogger(__name__)
 
-    def set_config(self, sshconfig):
+    def set_ssh_config(self, sshconfig):
         self.sshconfig = sshconfig
 
     def connect(self):
+        if not self.sshconfig:
+            self.logger.info("No SSH Config provided")
+            return False
         try:
             self.connection = paramiko.SSHClient()
-            if self.sshconfig.get('auto_add_policy', False):
+            if self.sshconfig.get('auto_add_policy', True):
                 self.connection.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             else:
                 self.connection.set_missing_host_key_policy(paramiko.RejectPolicy())
