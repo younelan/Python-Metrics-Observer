@@ -12,9 +12,9 @@ sys.path.insert(0, base_folder)
 
 
 from Plugin import Plugin
-import NokiaCollector as nc
+import LinuxCollector as lc
 
-class Nokia2425(Plugin):
+class Linux(Plugin):
     def __init__(self, config):
         super().__init__(config)
         self.style = """
@@ -27,41 +27,41 @@ class Nokia2425(Plugin):
             "network": {
                 "text": "Network",
                 "children": {
-                    "router": {"plugin": "nokia2425", "page": "router", "text": "Router"}
+                    "router": {"plugin": "linux", "page": "info", "text": "Linux"}
 
                 }
             }
         }
 
     def on_long_update(self):
-        sshconfig = self.config["credentials"].get("router", {})
+        sshconfig = self.config["credentials"].get("linux", {})
 
-        ssh = nc.NokiaCollector()
+        ssh = lc.LinuxCollector()
         ssh.set_ssh_config(sshconfig)
 
         if ssh.connect():
             collection = ssh.collect()
-            print ("--collecting")
+            print ("--collecting Linux")
             print (collection)
         else:
             collection = []
             self.debug(1, f"Connection failed. Error: {ssh.get_error()}\n")
 
-        self.store(collection, "router.json")
+        self.store(collection, "linux.json")
         ssh.disconnect()
 
     def show_page(self, params):
-        page = params.get("page", "router")
+        page = params.get("page", "linux")
         action = params.get("action", "")
         match page:
-            case "router":
+            case "linux":
                 return self.show_config()
             case _:
-                return "default case"
+                return self.show_config()
 
     def show_config(self):
         retval = ""
-        hostfile = f"{self.config['paths']['data']}/router.json"
+        hostfile = f"{self.config['paths']['data']}/linux.json"
         routerconfig = json.loads(open(hostfile).read()) if os.path.exists(hostfile) else {}
         rows = {}
 
