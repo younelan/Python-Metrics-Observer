@@ -1,19 +1,21 @@
-#Control Tower
+# Control Tower
 
-This is for Server Control Tower, a simple metrics collection tool
+This is the python version **Server Control**, a simple metrics collection tool
 
-##Usage
+## Usage
 
-./pytdc -c [plugin] -a [action]   - call tdc with plugin and run specified action
-./pytdc --update - run data collection on all plugins
+**./pytdc -c [plugin] -a [action]**   - call tdc with plugin and run specified action
+**./pytdc --update** - run data collection on all plugins
 
-##Cron
-rather than running pytdc manually, it is suggested to run the plugin in cron like this:
+## Cron
+Rather than running pytdc manually, it is suggested to run the plugin in cron like this:
+```
 */2 * * * * /var/www/html/server-control/backend/tdc --update >/dev/null 2>&1
+```
 
 for now, collected data is stored in data folder
 
-##config.json
+## config.json
 
 To configure pytdc, you use data/config.json
 
@@ -34,8 +36,6 @@ To configure pytdc, you use data/config.json
         }
 }
 
-##requirements
-install flask
 
 ```
 - **language** : Either "fr" or "en" unless you create a translation
@@ -45,11 +45,15 @@ install flask
 
 adjust to your network
 
-##web ui
+
+## web ui
 There is an experimental web ui, run it with the following:
+
 
 **python3 web.py**
 
 Though the menus don't work, from the web browser, you can call http://localhost:5000/?plugin=vitals&action=default
 
+## Web UI requirements
+pip install flask
 
