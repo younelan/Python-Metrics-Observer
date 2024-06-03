@@ -74,7 +74,7 @@ class PluginController:
         template_data = {
             'content': output,
             'navigationmenu': menu_entries,
-            'pagetitle': 'Periscope Server Tower',
+            'pagetitle': 'Pytrack Metrics Observer',
             **vars
         }
         

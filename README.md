@@ -1,6 +1,23 @@
-# Python Metrics Tracker 
+# Python Metrics Observer v0.02
 
-This is a simple metrics collection tool
+This is a very basic simple metrics collection tool. 
+
+This is a python port of a script originally written to see if I can implement python collection. A much improved php version will be released at some point
+
+consider this more a demo of flask, subprocess & paramiko to collect metrics than a full fledged tools
+
+version 0.02 ... my two cents. No warranty, use at your own risk ;)
+
+# Features:
+- Plugin based, easy to extend
+- Simple Flask UI
+- SSH Collection of remote metrics
+   - Plugin for Nokia2425 router
+   - Plugin for Linux servers
+- Mail que display
+- Ping to check if the internet is up
+- Multi Lingual support (French/ English)
+- ping a subnet and see who responds
 
 ## Usage
 

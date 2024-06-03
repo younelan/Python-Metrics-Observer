@@ -14,10 +14,10 @@ import argparse
 from PluginController import PluginController
 
 def help():
-    print("Periscope Server Control Help\n---------------------\n")
-    print("tdc -c [plugin]               - call tdc specified plugin")
-    print("tdc -c [plugin] -a [action]   - call tdc with plugin and run specified action")
-    print("tdc update - run data collection on all plugins\n")
+    print("Pytrack Metrics Observer Help\n---------------------\n")
+    print("pytrack -c [plugin]               - call pytrack specified plugin")
+    print("pytrack -c [plugin] -a [action]   - call pytrack with plugin and run specified action")
+    print("pytrack --update - run data collection on all plugins\n")
 
 def update(controller):
     print("Updating")
@@ -27,7 +27,7 @@ def update(controller):
 def main():
     config = get_config()
     parser = argparse.ArgumentParser(description="Periscope Server Control")
-    parser.add_argument("-c", "--call", metavar="[plugin]", help="call tdc specified plugin")
+    parser.add_argument("-c", "--call", metavar="[plugin]", help="call pytrack specified plugin")
     parser.add_argument("-a", "--action", metavar="[action]", help="run specified action")
     parser.add_argument("-u", "--update", action="store_true", help="run data collection on all plugins")
     args = parser.parse_args()

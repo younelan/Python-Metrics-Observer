@@ -85,7 +85,7 @@ class Vitals(Plugin):
         output += f"<h2 class='widgetheader'>{vital}</h2><p>{uptime}<p>"
         output += f"<p>{mem_info}<p>"
         output += "</div>"
-        output += "<div class='widget'><img align=absmiddle src='res/images/TowerLogo.png' width=200 height=auto></div>"
+        output += "<div class='widget' style='background-color:#ccc;height:100%;padding:10px;padding-top:150px;padding-bottom:150px;'><div style='color:#00a;'>Server</div><div style='color:brown'>Metrics</div><div style='color:green'>Observer</div></div>"
         output += "</div>"
         return output
 
