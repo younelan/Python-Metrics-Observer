@@ -70,3 +70,29 @@
 .config-table th {background-color:#005;color:white}
 .config-subcategory {background-color: #ffc; color:black;}
 
+.message-green {
+    background-color: rgb(206, 243, 206);
+    color: green;
+}
+.message-red {
+    background-color: rgb(255, 213, 196);
+    color: rgb(165, 6, 6);
+}
+.message-grey {
+    background-color: #CCC;
+    color: #777;
+}
+.red-dot {
+    height: 25px;
+    width: 25px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+}
+.grey-dot {
+    height: 25px;
+    width: 25px;
+    background-color: #aaa;
+    border-radius: 50%;
+    display: inline-block;
+}

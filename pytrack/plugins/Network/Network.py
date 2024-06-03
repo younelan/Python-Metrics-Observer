@@ -162,7 +162,6 @@ class Network(Plugin):
         return hosts
 
     def get_nmap_hosts(self, input):
-        print (input)
         up_hosts = []
         for line in input.split("\n"):
             if line.startswith("Status: Up"):

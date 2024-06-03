@@ -1,14 +1,15 @@
-# Control Tower
+# Python Metrics Tracker 
 
-This is the python version **Server Control**, a simple metrics collection tool
+This is a simple metrics collection tool
 
 ## Usage
 
-**./pytdc -c [plugin] -a [action]**   - call tdc with plugin and run specified action
-**./pytdc --update** - run data collection on all plugins
+**./pytrack -c [plugin] -a [action]**   - call tdc with plugin and run specified action
+**./pytrack --update** - run data collection on all plugins
+**python3 web.py** - Run the simple gui
 
 ## Cron
-Rather than running pytdc manually, it is suggested to run the plugin in cron like this:
+Rather than running pytrack manually, it is suggested to run the plugin in cron like this:
 ```
 */2 * * * * /var/www/html/server-control/backend/tdc --update >/dev/null 2>&1
 ```
@@ -17,7 +18,7 @@ for now, collected data is stored in data folder
 
 ## config.json
 
-To configure pytdc, you use data/config.json
+To configure pytrack, you use data/config.json
 
 ```
 {
@@ -48,7 +49,6 @@ adjust to your network
 
 ## web ui
 There is an experimental web ui, run it with the following:
-
 
 **python3 web.py**
 
