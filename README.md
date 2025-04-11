@@ -19,6 +19,17 @@ version 0.02 ... my two cents. No warranty, use at your own risk ;)
 - Multi Lingual support (French/ English)
 - ping a subnet and see who responds
 
+## Setup
+
+#Create environment:
+
+bash setup.sh
+
+#Activate environment
+When you want to run the script, activate the environment:
+
+source venv/bin/activate
+
 ## Usage
 
 **./pytrack -c [plugin] -a [action]**   - call tdc with plugin and run specified action
