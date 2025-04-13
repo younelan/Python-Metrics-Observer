@@ -18,20 +18,38 @@ class Vitals(Plugin):
             }
         }
 
-    def on_update(self):
-        uptime = open("/proc/uptime").read().split()[0]
+    def get_uptime(self):
+        # try:
+        #     with open("/proc/uptime", "r") as f:
+        #         uptime = f.readline().split()[0]
+        #     uptime = int(float(uptime))
+        #     days = uptime // 86400
+        #     hours = (uptime % 86400) // 3600
+        #     minutes = (uptime % 3600) // 60
+        #     seconds = uptime % 60
+        #     return f"{days}d {hours}h {minutes}m {seconds}s"
+        # except Exception as e:
+        #     return str(e)
+
+        try:
+            uptime = open("/proc/uptime").read().split()[0]
+        except FileNotFoundError:
+            uptime = 0
         time_seconds = float(uptime)
         if time_seconds / 3600 < 24:
             time = "{:02}:{:02}:{:02}".format(int(time_seconds // 3600), int((time_seconds // 60) % 60), time_seconds % 60)
         else:
             time = "{:d} days {:02}:{:02}:{:02}".format(int(time_seconds // (3600 * 24)), int((time_seconds // 3600) % 24), int((time_seconds // 60) % 60), time_seconds % 60)
         load = round(os.getloadavg()[0], 2)
+        return time, load
 
+    def on_update(self):
         data = {
             "time": self.get_translation("Time"),
             "start": self.get_translation("Uptime"),
             "load": self.get_translation("Load")
         }
+        time, load = self.get_uptime()
         now = datetime.now()
         current_time = now.strftime("%H:%M:%S")
         status = {
