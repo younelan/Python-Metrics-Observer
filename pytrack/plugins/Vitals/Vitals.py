@@ -3,6 +3,8 @@ from os.path import dirname, abspath
 base_folder = dirname(dirname(abspath(__file__)) )
 sys.path.insert(0, base_folder)
 from datetime import datetime
+import platform
+import subprocess
 
 from Plugin import Plugin
 
@@ -19,30 +21,27 @@ class Vitals(Plugin):
         }
 
     def get_uptime(self):
-        # try:
-        #     with open("/proc/uptime", "r") as f:
-        #         uptime = f.readline().split()[0]
-        #     uptime = int(float(uptime))
-        #     days = uptime // 86400
-        #     hours = (uptime % 86400) // 3600
-        #     minutes = (uptime % 3600) // 60
-        #     seconds = uptime % 60
-        #     return f"{days}d {hours}h {minutes}m {seconds}s"
-        # except Exception as e:
-        #     return str(e)
-
+        """
+        Gets the system uptime using the psutil library.
+        Returns a tuple containing the formatted uptime string and the 1-minute load average.
+        """
         try:
-            uptime = open("/proc/uptime").read().split()[0]
-        except FileNotFoundError:
-            uptime = 0
-        time_seconds = float(uptime)
-        if time_seconds / 3600 < 24:
-            time = "{:02}:{:02}:{:02}".format(int(time_seconds // 3600), int((time_seconds // 60) % 60), time_seconds % 60)
-        else:
-            time = "{:d} days {:02}:{:02}:{:02}".format(int(time_seconds // (3600 * 24)), int((time_seconds // 3600) % 24), int((time_seconds // 60) % 60), time_seconds % 60)
-        load = round(os.getloadavg()[0], 2)
-        return time, load
+            boot_time_timestamp = psutil.boot_time()
+            boot_time = datetime.datetime.fromtimestamp(boot_time_timestamp)
+            now = datetime.datetime.now()
+            uptime_seconds = int((now - boot_time).total_seconds())
 
+            if uptime_seconds / 3600 < 24:
+                time = "{:02}:{:02}:{:02}".format(int(uptime_seconds // 3600), int((uptime_seconds // 60) % 60), int(uptime_seconds % 60))
+            else:
+                time = "{:d} days {:02}:{:02}:{:02}".format(int(uptime_seconds // (3600 * 24)), int((uptime_seconds // 3600) % 24), int((uptime_seconds // 60) % 60), int(uptime_seconds % 60))
+
+            load = round(psutil.getloadavg()[0], 2)  # psutil also provides load averages
+            return time, load
+        except Exception as e:
+            print(f"Error getting uptime using psutil: {e}")
+            return "N/A", "N/A"
+    
     def on_update(self):
         data = {
             "time": self.get_translation("Time"),
