@@ -5,6 +5,8 @@ sys.path.insert(0, base_folder)
 from datetime import datetime
 import platform
 import subprocess
+import psutil
+import time
 
 from Plugin import Plugin
 
@@ -63,14 +65,29 @@ class Vitals(Plugin):
         return status
 
     def get_memory(self):
-        stats = {}
-        mem = open("/proc/meminfo").read().split("\n")
-        for line in mem:
-            if ":" in line:
-                key, value = line.split(":")
-                stats[key.strip()] = int(value.split()[0])
-        return stats
-
+        """
+        Gets the system memory information using the psutil library.
+        Returns a dictionary containing memory statistics.
+        """
+        try:
+            virtual_memory = psutil.virtual_memory()
+            swap_memory = psutil.swap_memory()
+            stats = {
+                "MemTotal": virtual_memory.total,
+                "MemFree": virtual_memory.available,
+                "MemUsed": virtual_memory.used,
+                "MemPercent": virtual_memory.percent,
+                "SwapTotal": swap_memory.total,
+                "SwapFree": swap_memory.free,
+                "SwapUsed": swap_memory.used,
+                "SwapPercent": swap_memory.percent,
+            }
+            print(stats)
+            return stats
+        except Exception as e:
+            print(f"Error getting memory info using psutil: {e}")
+            return {}
+    
     def show_memory(self):
         stats = self.get_memory()
         vars = {
