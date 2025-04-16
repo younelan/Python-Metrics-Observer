@@ -5,6 +5,7 @@ sys.path.insert(0, base_folder)
 from datetime import datetime
 import platform
 import subprocess
+import datetime
 import psutil
 import time
 
@@ -51,7 +52,9 @@ class Vitals(Plugin):
             "load": self.get_translation("Load")
         }
         time, load = self.get_uptime()
-        now = datetime.now()
+        print("Uptime:", time)
+        print("Load:", load)
+        now = datetime.datetime.now()
         current_time = now.strftime("%H:%M:%S")
         status = {
             "time": current_time,
