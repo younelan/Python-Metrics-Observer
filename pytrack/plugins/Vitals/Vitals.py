@@ -103,7 +103,7 @@ class Vitals(Plugin):
         output += "<table class='memtable'>"
         for key, value in vars.items():
             output += f"<tr><td class='memkey'>{self.get_translation(value)}</td>"
-            val = int((stats[key] if key in stats else 0) / 1024)
+            val = int((stats[key] if key in stats else 0) / 1024/1024)
             output += f"<td class='memvalue'>{val} MB</td></tr>"
         output += "</table>"
         return output
