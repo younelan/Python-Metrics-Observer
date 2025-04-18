@@ -64,7 +64,8 @@ class Linux(Plugin):
         hostfile = f"{self.config['paths']['data']}/linux.json"
         routerconfig = json.loads(open(hostfile).read()) if os.path.exists(hostfile) else {}
         rows = {}
-
+        if not routerconfig:
+            return "<h1>Linux</h1><p>No data found, Make sure plugin is running</p>"
         for name, section in routerconfig.get("info", {}).items():
             if section.get("success", False):
                 status = '<span class="connected">up</span>' 
