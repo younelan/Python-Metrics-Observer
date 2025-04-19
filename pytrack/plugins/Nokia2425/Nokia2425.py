@@ -64,7 +64,8 @@ class Nokia2425(Plugin):
         hostfile = f"{self.config['paths']['data']}/router.json"
         routerconfig = json.loads(open(hostfile).read()) if os.path.exists(hostfile) else {}
         rows = {}
-
+        if not routerconfig:
+            return "<h1>Router config not available</h1>"
         for name, section in routerconfig.get("info", {}).items():
             if section.get("success", False):
                 status = '<span class="connected">up</span>' 
