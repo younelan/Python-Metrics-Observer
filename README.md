@@ -30,6 +30,10 @@ When you want to run the script, activate the environment:
 
 source venv/bin/activate
 
+This assumes nmap is installed to scan the local network.
+
+If you have a Nokia router, put the credentials in config.jsn. This will also try to query the nokia router
+
 ## Usage
 
 **./pytrack -c [plugin] -a [action]**   - call tdc with plugin and run specified action
