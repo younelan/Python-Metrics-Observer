@@ -27,7 +27,7 @@ class Linux(Plugin):
             "network": {
                 "text": "Network",
                 "children": {
-                    "router": {"plugin": "linux", "page": "info", "text": "Linux"}
+                    "linux": {"plugin": "linux", "page": "info", "text": "Linux"},
 
                 }
             }
