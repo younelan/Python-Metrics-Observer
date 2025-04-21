@@ -24,14 +24,15 @@ class Nokia2425(Plugin):
 
     def get_menus(self):
         return {
-            "network": {
-                "text": "Network",
+            "router": {
+                "text": "Router",
                 "children": {
                     "router": {"plugin": "nokia2425", "page": "router", "text": "Router"}
 
                 }
             }
         }
+
 
     def on_long_update(self):
         sshconfig = self.config["credentials"].get("router", {})
